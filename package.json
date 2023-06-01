@@ -1,30 +1,12 @@
 {
-  "name": "publish-action",
+  "name": "update-vxy-tag-action",
   "version": "0.2.1",
-  "description": "Update the major version tag (v1, v2, etc.) to point to the specified tag",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc && ncc build",
-    "test": "jest",
-    "format": "prettier --no-error-on-unmatched-pattern --config ./.prettierrc.js --write \"**/*.{ts,yml,yaml}\"",
-    "format-check": "prettier --no-error-on-unmatched-pattern --config ./.prettierrc.js --check \"**/*.{ts,yml,yaml}\"",
-    "lint": "eslint --config ./.eslintrc.js \"**/*.ts\"",
-    "lint:fix": "eslint --config ./.eslintrc.js \"**/*.ts\" --fix"
+    "build": "tsc && ncc build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/actions/publish-action.git"
-  },
-  "keywords": [
-    "actions",
-    "publish"
-  ],
   "author": "GitHub",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/actions/publish-action/issues"
-  },
-  "homepage": "https://github.com/actions/publish-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.7",
     "@actions/github": "^4.0.0",
@@ -32,19 +14,8 @@
     "semver": "^7.3.5"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.2",
     "@types/semver": "^7.3.6",
-    "@typescript-eslint/eslint-plugin": "^5.54.0",
-    "@typescript-eslint/parser": "^5.54.0",
     "@vercel/ncc": "^0.28.5",
-    "eslint": "^8.35.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-jest": "^27.2.1",
-    "eslint-plugin-node": "^11.1.0",
-    "jest": "^27.2.5",
-    "jest-circus": "^27.2.5",
-    "prettier": "^2.8.4",
-    "ts-jest": "^27.0.5",
     "typescript": "^4.2.4"
   }
 }

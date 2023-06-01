@@ -5,8 +5,9 @@ export function isStableSemverVersion(version: SemVer): boolean {
   return version.prerelease.length === 0;
 }
 
-export function getMajorTagFromFullTag(fullTag: string): string {
-  return fullTag.split('.')[0];
+export function getMajorMinorTagFromFullTag(fullTag: string): string {
+  const tagParts = fullTag.split('.');
+  return `${tagParts[0]}.${tagParts[1]}`;
 }
 
 export function validateSemverVersionFromTag(tag: string): void {

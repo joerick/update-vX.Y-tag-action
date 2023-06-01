@@ -26,10 +26,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.postMessageToSlack = exports.updateTag = exports.validateIfReleaseIsPublished = void 0;
+exports.updateTag = exports.validateIfReleaseIsPublished = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
-const http_client_1 = __nccwpck_require__(9925);
 async function findTag(tag, octokitClient) {
     try {
         const { data: foundTag } = await octokitClient.git.getRef({
@@ -97,12 +96,6 @@ async function updateTag(sourceTag, targetTag, octokitClient) {
     }
 }
 exports.updateTag = updateTag;
-async function postMessageToSlack(slackWebhook, message) {
-    const jsonData = { text: message };
-    const http = new http_client_1.HttpClient();
-    await http.postJson(slackWebhook, jsonData);
-}
-exports.postMessageToSlack = postMessageToSlack;
 
 
 /***/ }),
@@ -134,7 +127,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const github_1 = __nccwpck_require__(5438);
 const api_utils_1 = __nccwpck_require__(2430);
 const version_utils_1 = __nccwpck_require__(1534);
 async function run() {
@@ -144,23 +136,13 @@ async function run() {
         const sourceTagName = core.getInput('source-tag');
         version_utils_1.validateSemverVersionFromTag(sourceTagName);
         await api_utils_1.validateIfReleaseIsPublished(sourceTagName, octokitClient);
-        const majorTag = version_utils_1.getMajorTagFromFullTag(sourceTagName);
-        await api_utils_1.updateTag(sourceTagName, majorTag, octokitClient);
-        core.setOutput('major-tag', majorTag);
-        core.info(`The '${majorTag}' major tag now points to the '${sourceTagName}' tag`);
-        const slackMessage = `The ${majorTag} tag has been successfully updated for the ${github_1.context.repo.repo} action to include changes from ${sourceTagName}`;
-        await reportStatusToSlack(slackMessage);
+        const majorMinorTag = version_utils_1.getMajorMinorTagFromFullTag(sourceTagName);
+        await api_utils_1.updateTag(sourceTagName, majorMinorTag, octokitClient);
+        core.setOutput('major-minor-tag', majorMinorTag);
+        core.info(`The '${majorMinorTag}' tag now points to the '${sourceTagName}' tag`);
     }
     catch (error) {
         core.setFailed(error.message);
-        const slackMessage = `Failed to update a major tag for the ${github_1.context.repo.repo} action`;
-        await reportStatusToSlack(slackMessage);
-    }
-}
-async function reportStatusToSlack(message) {
-    const slackWebhook = core.getInput('slack-webhook');
-    if (slackWebhook) {
-        await api_utils_1.postMessageToSlack(slackWebhook, message);
     }
 }
 run();
@@ -177,16 +159,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateSemverVersionFromTag = exports.getMajorTagFromFullTag = exports.isStableSemverVersion = void 0;
+exports.validateSemverVersionFromTag = exports.getMajorMinorTagFromFullTag = exports.isStableSemverVersion = void 0;
 const parse_1 = __importDefault(__nccwpck_require__(5925));
 function isStableSemverVersion(version) {
     return version.prerelease.length === 0;
 }
 exports.isStableSemverVersion = isStableSemverVersion;
-function getMajorTagFromFullTag(fullTag) {
-    return fullTag.split('.')[0];
+function getMajorMinorTagFromFullTag(fullTag) {
+    const tagParts = fullTag.split('.');
+    return `${tagParts[0]}.${tagParts[1]}`;
 }
-exports.getMajorTagFromFullTag = getMajorTagFromFullTag;
+exports.getMajorMinorTagFromFullTag = getMajorMinorTagFromFullTag;
 function validateSemverVersionFromTag(tag) {
     const semverVersion = parse_1.default(tag);
     if (!semverVersion) {
