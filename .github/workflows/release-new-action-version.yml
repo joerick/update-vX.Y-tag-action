@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       TAG_NAME:
-        description: 'Tag name that the major tag will point to'
+        description: 'Tag name that the major.minor tag will point to'
         required: true
 
 env:
@@ -17,8 +17,7 @@ defaults:
 
 jobs:
   update_tag:
-    name: Update the major tag to include the ${{ github.event.inputs.TAG_NAME || github.event.release.tag_name }} changes
-    # Remember to configure the releaseNewActionVersion environment with required approvers in the repository settings
+    name: Update the major.minor tag to include the ${{ github.event.inputs.TAG_NAME || github.event.release.tag_name }} changes
     environment:
       name: releaseNewActionVersion
     runs-on: ubuntu-latest
@@ -28,8 +27,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Update the ${{ env.TAG_NAME }} tag
-        id: update-major-tag
+        id: update-major-minor-tag
         uses: ./
         with:
           source-tag: ${{ env.TAG_NAME }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
