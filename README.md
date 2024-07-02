@@ -1,4 +1,4 @@
-# update-vX.Y-tag-action (forked from actions/publish action)
+# update-vX.Y-tag-action (forked from actions/publish-action)
 
 This action does the following
 - Update a major-minor tag (v1.2, for example) to point to the latest release (v1.2.1, for example).
