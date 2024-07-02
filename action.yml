@@ -11,5 +11,5 @@ outputs:
   major-minor-tag:
     description: 'The major.minor version tag that has been updated (created). Examples: v1.2, 1.2'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'

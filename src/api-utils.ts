@@ -18,7 +18,7 @@ async function findTag(
   octokitClient: InstanceType<typeof GitHub>
 ): Promise<GitRef | null> {
   try {
-    const {data: foundTag} = await octokitClient.git.getRef({
+    const {data: foundTag} = await octokitClient.rest.git.getRef({
       ...context.repo,
       ref: `tags/${tag}`
     });
@@ -52,7 +52,7 @@ export async function validateIfReleaseIsPublished(
   octokitClient: InstanceType<typeof GitHub>
 ): Promise<void> {
   try {
-    const {data: foundRelease} = await octokitClient.repos.getReleaseByTag({
+    const {data: foundRelease} = await octokitClient.rest.repos.getReleaseByTag({
       ...context.repo,
       tag
     });
@@ -87,7 +87,7 @@ export async function updateTag(
       `Updating the '${targetTag}' tag to point to the '${sourceTag}' tag`
     );
 
-    await octokitClient.git.updateRef({
+    await octokitClient.rest.git.updateRef({
       ...context.repo,
       ref: refName,
       sha: sourceTagSHA,
@@ -96,7 +96,7 @@ export async function updateTag(
   } else {
     core.info(`Creating the '${targetTag}' tag from the '${sourceTag}' tag`);
 
-    await octokitClient.git.createRef({
+    await octokitClient.rest.git.createRef({
       ...context.repo,
       ref: `refs/${refName}`,
       sha: sourceTagSHA
